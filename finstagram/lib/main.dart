@@ -12,15 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Finstagram',
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: "/login",
+      initialRoute: "/",
       routes: {
         "/": (context) => const HomePage(),
-        "/register": (context) => RegisterPage(),
-        "/login": (context) => LoginPage(),
+        "/register": (context) => const RegisterPage(),
+        "/login": (context) => const LoginPage(),
       },
     );
   }
