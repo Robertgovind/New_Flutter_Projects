@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -11,6 +14,7 @@ class _RegisterPageState extends State<RegisterPage> {
   double? _deviceHeight, _deviceWidth;
   final GlobalKey<FormState> _registerFromKey = GlobalKey<FormState>();
   String? _name, _email, _password;
+  File? _image; // must be of type dart:io
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -47,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registerButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: _registerUser,
       minWidth: _deviceWidth! * 0.70,
       height: _deviceHeight! * 0.06,
       color: Colors.red,
@@ -57,6 +61,16 @@ class _RegisterPageState extends State<RegisterPage> {
             fontSize: 23, color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
+  }
+
+  void _registerUser() {
+    if (_registerFromKey.currentState!.validate() && _image != null) {
+      _registerFromKey.currentState!.save();
+      print("valid");
+      print(_email);
+      print(_password);
+      print(_name);
+    }
   }
 
   Widget _registerForm() {
@@ -125,12 +139,27 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _imagePicker() {
-    return Container(
-      height: _deviceHeight! * 0.15,
-      width: _deviceWidth! * 0.15,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage("https://i.pravatar.cc/350"),
+    var imageProvider = _image != null
+        ? FileImage(_image!)
+        : NetworkImage("https://i.pravatar.cc/350");
+    return GestureDetector(
+      onTap: () {
+        FilePicker.platform.pickFiles(type: FileType.image).then((value) {
+          setState(() {
+            _image = File(value!.files.first.path!);
+          });
+        });
+      },
+      child: Container(
+        height: _deviceHeight! * 0.15,
+        width: _deviceWidth! * 0.15,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(90),
+          border: Border.all(color: Colors.black, width: 2),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: imageProvider as ImageProvider,
+          ),
         ),
       ),
     );
