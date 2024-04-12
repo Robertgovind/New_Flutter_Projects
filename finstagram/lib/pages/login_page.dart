@@ -1,5 +1,7 @@
 import 'package:finstagram/pages/register_page.dart';
+import 'package:finstagram/services/firebase_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,9 +13,18 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   double? _deviceHeight, _deviceWidth;
 
+  FirebaseService? firebaseService;
+
   final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
 
   String? _email, _password;
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -97,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _passwordTextField() {
     return TextFormField(
-      decoration: InputDecoration(hintText: "Password"),
+      decoration: const InputDecoration(hintText: "Password"),
       obscureText: true,
       onSaved: (value) {
         setState(() {
@@ -112,9 +123,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _loginUser() {
+  void _loginUser() async {
     if (_loginKey.currentState!.validate()) {
       _loginKey.currentState!.save();
+      bool result = await firebaseService!
+          .loginUser(email: _email!, password: _password!);
+      if (result) Navigator.popAndPushNamed(context, '/');
     }
   }
 
