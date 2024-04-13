@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:finstagram/services/firebase_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,6 +17,15 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _registerFromKey = GlobalKey<FormState>();
   String? _name, _email, _password;
   File? _image; // must be of type dart:io
+
+  FirebaseService? firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -63,13 +74,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _registerUser() {
+  void _registerUser() async {
     if (_registerFromKey.currentState!.validate() && _image != null) {
       _registerFromKey.currentState!.save();
-      print("valid");
-      print(_email);
-      print(_password);
-      print(_name);
+      bool result = await firebaseService!.registerUser(
+          name: _name!, email: _email!, password: _password!, image: _image!);
+      if (result) Navigator.pop(context);
     }
   }
 
@@ -141,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _imagePicker() {
     var imageProvider = _image != null
         ? FileImage(_image!)
-        : NetworkImage("https://i.pravatar.cc/350");
+        : const NetworkImage("https://i.pravatar.cc/350");
     return GestureDetector(
       onTap: () {
         FilePicker.platform.pickFiles(type: FileType.image).then((value) {

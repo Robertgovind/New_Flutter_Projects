@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:finstagram/pages/feed_page.dart';
 import 'package:finstagram/pages/profile_page.dart';
+import 'package:finstagram/services/firebase_services.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,6 +20,15 @@ class _HomePageState extends State<HomePage> {
     FeedPage(),
     ProfilePage(),
   ];
+
+  FirebaseService? firebaseService;
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: _postImage,
             child: const Icon(
               Icons.add_a_photo,
               color: Colors.white,
@@ -36,7 +50,10 @@ class _HomePageState extends State<HomePage> {
             width: 5,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () async {
+              await firebaseService!.logOut();
+              Navigator.popAndPushNamed(context, '/login');
+            },
             child: const Icon(
               Icons.logout,
               color: Colors.white,
@@ -63,7 +80,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(
               Icons.home,
             ),
-            label: "Home"),
+            label: "Feed"),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.person,
@@ -72,5 +89,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  void _postImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+
+    File image = File(result!.files.first.path!);
+    await firebaseService!.postImage(image);
   }
 }

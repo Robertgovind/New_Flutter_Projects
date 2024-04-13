@@ -128,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
       _loginKey.currentState!.save();
       bool result = await firebaseService!
           .loginUser(email: _email!, password: _password!);
+      print(result);
       if (result) Navigator.popAndPushNamed(context, '/');
     }
   }
