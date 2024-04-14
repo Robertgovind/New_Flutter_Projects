@@ -1,7 +1,17 @@
 import 'package:employee/pages/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyDx3RggDCtfOxNekSAG0f4TO4MljfW8eQE',
+        appId: '1:402925927048:android:9f2f4e4b868038cb20bd3d',
+        messagingSenderId: '402925927048',
+        projectId: 'employee-f7699',
+        storageBucket: 'employee-f7699.appspot.com'),
+  );
   runApp(const MyApp());
 }
 
