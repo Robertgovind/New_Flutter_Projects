@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402925927048",
+    "project_id": "employee-f7699",
+    "storage_bucket": "employee-f7699.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402925927048:android:9f2f4e4b868038cb20bd3d",
+        "android_client_info": {
+          "package_name": "com.example.employee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx3RggDCtfOxNekSAG0f4TO4MljfW8eQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
