@@ -11,9 +11,9 @@ class AddEmployeeInfo extends StatefulWidget {
 }
 
 class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
+  TextEditingController? nameController = TextEditingController();
+  TextEditingController? ageController = TextEditingController();
+  TextEditingController? locationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
                   fontWeight: FontWeight.bold),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.only(left: 10, top: 5),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
@@ -73,7 +73,7 @@ class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
                   fontWeight: FontWeight.bold),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.only(left: 10, top: 5),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
@@ -94,7 +94,7 @@ class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
                   fontWeight: FontWeight.bold),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 5),
+              margin: const EdgeInsets.symmetric(vertical: 10),
               padding: const EdgeInsets.only(left: 10, top: 5),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
@@ -120,9 +120,10 @@ class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
                   onPressed: () async {
                     String id = randomAlphaNumeric(10);
                     Map<String, dynamic> employeeInfo = {
-                      "name": nameController,
-                      "age": ageController,
-                      "location": locationController,
+                      "name": nameController!.text,
+                      "age": ageController!.text,
+                      "id": id,
+                      "location": locationController!.text,
                     };
                     await DatabaseMethod()
                         .addEmployeeDetails(employeeInfo, id)
@@ -135,7 +136,12 @@ class _AddEmployeeInfoState extends State<AddEmployeeInfo> {
                           backgroundColor: Colors.red,
                           textColor: Colors.white,
                           fontSize: 16.0);
+                    }).onError((error, stackTrace) {
+                      print(error);
                     });
+                    nameController!.clear();
+                    ageController!.clear();
+                    locationController!.clear();
                   },
                   child: const Text(
                     "Add",
